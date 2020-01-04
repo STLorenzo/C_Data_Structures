@@ -1,5 +1,7 @@
 # Makefile
 
+PROGRAM_NAME=Main
+
 SRC_FOLDER=src
 H_FOLDER=headers
 O_FOLDER=objects
@@ -15,7 +17,7 @@ LIBS = -lm
 _DEPS = data_types.h list.h node.h
 DEPS = $(patsubst %, $(H_FOLDER)/%, $(_DEPS))
 
-_OBJ = main.o data_types.o list.o node.o
+_OBJ = main.o list.o node.o
 OBJ = $(patsubst %, $(O_FOLDER)/%, $(_OBJ))
 
 # GitHub URL
@@ -30,14 +32,24 @@ URL = git@github.com:pipematin/C_Data_Structures.git
 $(O_FOLDER)/%.o: $(SRC_FOLDER)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-Main: $(OBJ)
+$(PROGRAM_NAME): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 
 # To use this rules write: make (rule)
 # Example: make execute
 execute:
-	./Main
+	./$(PROGRAM_NAME)
+
+# Debug flag so the compilation is ready to use with gdb.
+# More info in: https://www.cs.umd.edu/~srhuang/teaching/cmsc212/gdb-tutorial-handout.pdf
+debug: CFLAGS += -g
+debug: $(PROGRAM_NAME)
+
+# Valgrind execution to check for memory leaks of the program
+# More info in: https://valgrind.org/docs/manual/quick-start.html
+valgrind: 
+	valgrind --leak-check=yes --verbose --show-leak-kinds=all --track-origins=yes ./$(PROGRAM_NAME)
 
 # .PHONY clean -> keeps make from doing something with a file named clean
 .PHONY: clean
@@ -45,7 +57,7 @@ execute:
 # core ->file with information about program state when it crashed. 
 # Created when this happen if core dumps are enabled: Segmentation fault(core dumped) 
 clean:
-	rm -f Main $(O_FOLDER)/*.o *~ core $(H_FOLDER)/*~
+	rm -f $(PROGRAM_NAME) $(O_FOLDER)/*.o *~ core $(H_FOLDER)/*~
 
 
 # --------------------------------   GIT RULES   ---------------------------------

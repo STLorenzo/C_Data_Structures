@@ -5,7 +5,6 @@
 #include "node.h"
 #include "list.h"
 
-
 List* listCreate(){
 	// variables
 	List *list = NULL;
@@ -16,7 +15,7 @@ List* listCreate(){
 
 	// Associate values to variables
 	list->length = 0;
-	list->next = list->previous = NULL;
+	list->head = list->tail = NULL;
 
 	// Remember to return the list
 	return list;
@@ -27,7 +26,7 @@ void listDestroy(List *list){
 	if(list == NULL) return;
 
 	// variables
-	Node *current == NULL;
+	Node *current = NULL;
 
 	//while there is at least one element
 	while(list->head != NULL){
@@ -53,7 +52,7 @@ STATUS listPrepend(List *list, void *data, int dataSize, freeFunction freeFn,
 	Node *node = NULL;
 
 	// Create node
-	node = createNode(data, /* before */NULL, /* next */NULL, 
+	node = nodeCreate(data, /* before */NULL, /* next */NULL, 
 		dataSize, freeFn, compFn, toStringFn);
 	if(node == NULL) return ERROR;
 
@@ -82,7 +81,7 @@ STATUS listAppend(List *list, void *data, int dataSize, freeFunction freeFn,
 	Node *node = NULL;
 
 	// Create node
-	node = createNode(data, /* before */NULL, /* next */NULL, 
+	node = nodeCreate(data, /* before */NULL, /* next */NULL, 
 		dataSize, freeFn, compFn, toStringFn);
 	if(node == NULL) return ERROR;
 
@@ -93,7 +92,7 @@ STATUS listAppend(List *list, void *data, int dataSize, freeFunction freeFn,
 	// put the node at the end of list
 	list->tail = node;
 	// check if it is the first appended node
-	if(!list->head) list->head = node
+	if(!list->head) list->head = node;
 
 	// increase number of elements
 	list->length++;
@@ -147,14 +146,14 @@ STATUS listRemoveFirstElement(List *list){
 
 	// check if there is only one 
 	if(!list->head->next){
-		nodeDestroy(list->head)
+		nodeDestroy(list->head);
 		list->head = NULL;
 		list->tail = NULL;
 	}// if there are more than one
 	else{
 		Node *second = NULL;
 		second = list->head->next;
-		nodeDestroy(list->head)
+		nodeDestroy(list->head);
 		list->head = second;
 	}
 
@@ -167,7 +166,7 @@ STATUS listRemoveLastElement(List *list){
 
 	// check if there is only one 
 	if(!list->head->next){
-		nodeDestroy(list->head)
+		nodeDestroy(list->head);
 		list->head = NULL;
 		list->tail = NULL;
 	}// if there are more than one
@@ -177,10 +176,10 @@ STATUS listRemoveLastElement(List *list){
 		// First we start from first node
 		previous_to_last = list->head;
 		while(previous_to_last->next->next){
-			previous_to_last = previous_to_last->next
+			previous_to_last = previous_to_last->next;
 		}
 		// remove last element
-		nodeDestroy(list->tail)
+		nodeDestroy(list->tail);
 
 		// assign value
 		list->tail = previous_to_last;

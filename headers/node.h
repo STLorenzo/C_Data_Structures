@@ -11,13 +11,15 @@
 	in the node.c file and main.c file. So thanks to the ifndef the compiler only
 	imports one time this node.h file.
 */
-#ifndef __LIST_H 
-#define __LIST_H
+#ifndef __NODE_H 
+#define __NODE_H
+
+#include "data_types.h"
 
 typedef struct _Node {
 	void* data;
-	Node *next;
-	Node *before;
+	struct _Node *next;
+	struct _Node *before;
 	int dataSize;
 	freeFunction freeFn;
 	compareFunction compFn;

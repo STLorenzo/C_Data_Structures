@@ -17,6 +17,7 @@ typedef enum {
 }STATUS;
 
 typedef enum{
+	ER = -1,
 	EQ = 0,
 	GT = 1,
 	LT = 2
@@ -30,7 +31,7 @@ typedef void (*freeFunction)(void *);
 // Iterator function for the list 
 typedef bool (*listIterator)(void *);
 // Comparing function
-typedef bool (*compareFunction)(void *, void *);
+typedef COMPARATION (*compareFunction)(void *, void *);
 // String function
 typedef char* (*toStringFunction)(void *);
 

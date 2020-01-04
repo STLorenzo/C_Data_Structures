@@ -1,4 +1,5 @@
 #include <stdlib.h> // Supplies malloc(), calloc(), and realloc()
+#include <string.h> // Supplies memcpy(), strlen(), strcpy(), strcat(), strcmp(), strlwr(), strupr()
 
 #include "node.h"
 
@@ -16,7 +17,7 @@ Node* nodeCreate(void *data, Node *before, Node *next, int dataSize, freeFunctio
 
 	// TODO: CHECK IF CONSTRUCTOR FUNCTION IS NEEDED
 	// allocate memory for data. Free node and return NULL if not posible
-	node->data = malloc(dataSize)
+	node->data = malloc(dataSize);
 	if(node->data == NULL){
 		free(node);
 		return NULL;
@@ -26,7 +27,7 @@ Node* nodeCreate(void *data, Node *before, Node *next, int dataSize, freeFunctio
 	memcpy(node->data, data, dataSize);
 
 	// assign static values
-	node->dataSize = dataSize
+	node->dataSize = dataSize;
 	node->freeFn = freeFn;
 	node->compFn = compFn;
 	node->toStringFn = toStringFn;
@@ -52,13 +53,13 @@ char* nodeToString(Node *node){
 	// input check
 	if( node == NULL || !node->toStringFn) return NULL;
 
-	return node->toStringFn(node);
+	return node->toStringFn(node->data);
 }
 
 COMPARATION nodeCompare(Node *node1, Node *node2){
 	// input check
 	if( node1 == NULL || node2 == NULL || !node1->compFn
-		|| node1->compFn != node2->compFn) return NULL;
+		|| node1->compFn != node2->compFn) return ER;
 
-	return node1->compFn(node1, node2);
+	return node1->compFn(node1->data, node2->data);
 }
