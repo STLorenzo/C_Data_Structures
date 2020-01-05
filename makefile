@@ -56,7 +56,7 @@ valgrind:
 .PHONY: clean
 
 # core ->file with information about program state when it crashed. 
-# Created when this happen if core dumps are enabled: Segmentation fault(core dumped) 
+# Created when this happens if core dumps are enabled: Segmentation fault(core dumped) 
 clean:
 	rm -f $(PROGRAM_NAME) $(O_FOLDER)/*.o *~ core $(H_FOLDER)/*~
 
