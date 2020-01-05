@@ -1,6 +1,8 @@
 #include <stdio.h> // Supplies FILE, stdin, stdout, stderr, and the fprint() family of functions
 #include <stdlib.h> // Supplies malloc(), calloc(), and realloc()
 #include <assert.h> // assert macro. Verifies assumptions made by the program
+#include <string.h> // Supplies strlen(), strcpy(), strcat(), strcmp(), strlwr(), strupr()
+
 
 #include "node.h"
 #include "list.h"
@@ -41,7 +43,7 @@ void listDestroy(List *list){
 	free(list);
 }
 
-STATUS listPrepend(List *list, void *data, int dataSize, freeFunction freeFn,
+STATUS listPrepend(List *list, void *data, size_t dataSize, freeFunction freeFn,
 	compareFunction compFn, toStringFunction toStringFn){
 	//input check
 	if(list == NULL || data == NULL
@@ -62,6 +64,8 @@ STATUS listPrepend(List *list, void *data, int dataSize, freeFunction freeFn,
 	list->head = node;
 	// check if it is the first appended node
 	if(!list->tail) list->tail = node;
+	// if not Make second node point to first
+	else node->next->before = node;
 
 	// increase number of elements
 	list->length++;
@@ -70,7 +74,7 @@ STATUS listPrepend(List *list, void *data, int dataSize, freeFunction freeFn,
 }
 
 
-STATUS listAppend(List *list, void *data, int dataSize, freeFunction freeFn,
+STATUS listAppend(List *list, void *data, size_t dataSize, freeFunction freeFn,
 	compareFunction compFn, toStringFunction toStringFn){
 	//input check
 	if(list == NULL || data == NULL
@@ -88,6 +92,7 @@ STATUS listAppend(List *list, void *data, int dataSize, freeFunction freeFn,
 	// Make previous last node point to the last appended
 	if(list->tail){
 		list->tail->next = node;
+		node->before = list->tail;
 	}
 	// put the node at the end of list
 	list->tail = node;
@@ -142,6 +147,7 @@ void listForEach(List *list, listIterator iterator){
 
 STATUS listRemoveFirstElement(List *list){
 	//input check
+	// TODO: CHECK THIS INPUT ERROR WITH EMPTY LIST
 	if(list == NULL || list->head == NULL || list->tail == NULL) return ERROR;
 
 	// check if there is only one 
@@ -155,6 +161,7 @@ STATUS listRemoveFirstElement(List *list){
 		second = list->head->next;
 		nodeDestroy(list->head);
 		list->head = second;
+		second->before = NULL;
 	}
 
 	return OK;
@@ -171,21 +178,55 @@ STATUS listRemoveLastElement(List *list){
 		list->tail = NULL;
 	}// if there are more than one
 	else{
-		// we have to go through the list
+		// Get previous to last node
 		Node *previous_to_last = NULL;
-		// First we start from first node
-		previous_to_last = list->head;
-		while(previous_to_last->next->next){
-			previous_to_last = previous_to_last->next;
-		}
+		previous_to_last = list->tail->before;
 		// remove last element
 		nodeDestroy(list->tail);
-
 		// assign value
 		list->tail = previous_to_last;
+		// because it is the last node make next = NULL
+		previous_to_last->next = NULL;
 	}
 
 	return OK;
+}
+
+char* listToString(List *list){
+	if(list == NULL || list->head == NULL) return NULL;
+
+	char *string = NULL;
+	char *final = NULL;
+	size_t len = 2;
+
+	final = (char*)malloc(sizeof(char) * len);
+	strcpy(final,"[");
+
+	Node *node = NULL;
+	node = list->head;
+
+	while(node){
+		string = nodeToString(node);
+		len += (strlen(string)+1);
+		final = (char*)realloc(final, len);
+		strcat(final, string);
+		free(string);
+		if(node->next){
+			strcat(final,",");
+		}
+		node = node->next;
+	}
+	strcat(final, "]");
+	return final;
+}
+
+void listPrint(List *list, FILE *f){
+	if(list == NULL || f == NULL) return;
+
+	char *list_string = NULL;
+	list_string = listToString(list);
+	fprintf(f,"%s",list_string);
+	free(list_string);
 }
 
 // TODO: All this shit
@@ -193,7 +234,7 @@ STATUS listRemoveLastElement(List *list){
 /*
 STATUS listRemoveElement(List *list, void *data, compareFunction f);
 
-char* listToString(List *list);
+
 */
 
 

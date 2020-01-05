@@ -20,13 +20,13 @@ typedef struct _Node {
 	void* data;
 	struct _Node *next;
 	struct _Node *before;
-	int dataSize;
+	size_t dataSize;
 	freeFunction freeFn;
 	compareFunction compFn;
 	toStringFunction toStringFn;
 } Node;
 
-Node* nodeCreate(void* data, Node *before, Node* next, int dataSize, freeFunction freeFn,
+Node* nodeCreate(void* data, Node *before, Node* next, size_t dataSize, freeFunction freeFn,
 	compareFunction compFn, toStringFunction toStringFn);
 void nodeDestroy(Node *node);
 char* nodeToString(Node *node);

@@ -3,7 +3,7 @@
 
 #include "node.h"
 
-Node* nodeCreate(void *data, Node *before, Node *next, int dataSize, freeFunction freeFn,
+Node* nodeCreate(void *data, Node *before, Node *next, size_t dataSize, freeFunction freeFn,
 	compareFunction compFn, toStringFunction toStringFn){
 	// input check
 	if(data == NULL || dataSize <= 0) return NULL;
@@ -45,7 +45,6 @@ void nodeDestroy(Node *node){
 		node->freeFn(node->data);
 	}
 
-	free(node->data);
 	free(node);
 }
 

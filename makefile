@@ -14,10 +14,10 @@ LIBS = -lm
 
 # $(patsubst PATTERN,REPLACEMENT,TEXT) 
 # In this case patsubst picks each _DEPS files and adds H_FOLDER behind to form H_FOLDER/_DEPS(file)
-_DEPS = data_types.h list.h node.h
+_DEPS = data_types.h list.h node.h int_node.h
 DEPS = $(patsubst %, $(H_FOLDER)/%, $(_DEPS))
 
-_OBJ = main.o list.o node.o
+_OBJ = main.o list.o node.o int_node.o
 OBJ = $(patsubst %, $(O_FOLDER)/%, $(_OBJ))
 
 # GitHub URL
