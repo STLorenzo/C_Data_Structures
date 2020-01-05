@@ -14,11 +14,17 @@ LIBS = -lm
 
 # $(patsubst PATTERN,REPLACEMENT,TEXT) 
 # In this case patsubst picks each _DEPS files and adds H_FOLDER behind to form H_FOLDER/_DEPS(file)
-_DEPS = data_types.h list.h node.h int_node.h
-DEPS = $(patsubst %, $(H_FOLDER)/%, $(_DEPS))
 
-_OBJ = main.o list.o node.o int_node.o
-OBJ = $(patsubst %, $(O_FOLDER)/%, $(_OBJ))
+# wildcard picks all H_FOLDER header files and stores them in the variable
+DEPS = $(wildcard $(H_FOLDER)/*.h)
+#_DEPS = data_types.h list.h node.h int_node.h
+#DEPS = $(patsubst %, $(H_FOLDER)/%, $(_DEPS))
+
+
+_OBJ = $(wildcard $(SRC_FOLDER)/*.c)
+OBJ = $(patsubst $(SRC_FOLDER)/%, $(O_FOLDER)/%, $(patsubst %.c, %.o, $(_OBJ)))
+#_OBJ = main.o list.o node.o int_node.o
+#OBJ = $(patsubst %, $(O_FOLDER)/%, $(_OBJ))
 
 # GitHub URL
 COMMIT_MSG = "commited from Makefile"
@@ -38,6 +44,9 @@ $(PROGRAM_NAME): $(OBJ)
 
 # To use this rules write: make (rule)
 # Example: make execute
+test:
+	echo $(OBJ)
+
 execute:
 	./$(PROGRAM_NAME)
 
