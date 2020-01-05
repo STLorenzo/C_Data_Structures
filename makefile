@@ -12,18 +12,13 @@ CFLAGS=-I$(H_FOLDER) # Look in directory for headers -I(directory) note: written
 # Example that includes the math library in compilation
 LIBS = -lm
 
-# $(patsubst PATTERN,REPLACEMENT,TEXT) 
-# In this case patsubst picks each _DEPS files and adds H_FOLDER behind to form H_FOLDER/_DEPS(file)
 
 # wildcard picks all H_FOLDER header files and stores them in the variable
 DEPS = $(wildcard $(H_FOLDER)/*.h)
-#_DEPS = data_types.h list.h node.h int_node.h
-#DEPS = $(patsubst %, $(H_FOLDER)/%, $(_DEPS))
 
+# $(patsubst PATTERN,REPLACEMENT,TEXT) 
 _OBJ = $(wildcard $(SRC_FOLDER)/*.c)
 OBJ = $(patsubst $(SRC_FOLDER)/%, $(O_FOLDER)/%, $(patsubst %.c, %.o, $(_OBJ)))
-#_OBJ = main.o list.o node.o int_node.o
-#OBJ = $(patsubst %, $(O_FOLDER)/%, $(_OBJ))
 
 # GitHub URL
 COMMIT_MSG = "commited from Makefile"
@@ -83,11 +78,11 @@ git-push:
 	git push origin master
 
 # (IMPORTANT!!) First create an empty repository in gitHub 
+# and copy the link in URL variable
 # Then execute this command
 git-first-of-all: git-init git-remote
 
 git-upload: git-add git-commit git-push
 
-# git pull (your repository url)
 git-download:
 	git pull $(URL)
