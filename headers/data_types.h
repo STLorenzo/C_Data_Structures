@@ -34,5 +34,7 @@ typedef bool (*listIterator)(void *);
 typedef COMPARATION (*compareFunction)(void *, void *);
 // String function
 typedef char* (*toStringFunction)(void *);
+// Copy function
+typedef void* (*copyFunction)(void *);
 
 #endif

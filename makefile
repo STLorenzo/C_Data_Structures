@@ -12,7 +12,6 @@ CFLAGS=-I$(H_FOLDER) # Look in directory for headers -I(directory) note: written
 # Example that includes the math library in compilation
 LIBS = -lm
 
-
 # wildcard picks all H_FOLDER header files and stores them in the variable
 DEPS = $(wildcard $(H_FOLDER)/*.h)
 

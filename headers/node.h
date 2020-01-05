@@ -24,10 +24,11 @@ typedef struct _Node {
 	freeFunction freeFn;
 	compareFunction compFn;
 	toStringFunction toStringFn;
+	copyFunction copyFn;
 } Node;
 
 Node* nodeCreate(void* data, Node *before, Node* next, size_t dataSize, freeFunction freeFn,
-	compareFunction compFn, toStringFunction toStringFn);
+	compareFunction compFn, toStringFunction toStringFn, copyFunction copyFn);
 void nodeDestroy(Node *node);
 char* nodeToString(Node *node);
 COMPARATION nodeCompare(Node *node1, Node *node2);

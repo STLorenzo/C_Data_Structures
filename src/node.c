@@ -4,7 +4,7 @@
 #include "node.h"
 
 Node* nodeCreate(void *data, Node *before, Node *next, size_t dataSize, freeFunction freeFn,
-	compareFunction compFn, toStringFunction toStringFn){
+	compareFunction compFn, toStringFunction toStringFn, copyFunction copyFn){
 	// input check
 	if(data == NULL || dataSize <= 0) return NULL;
 
@@ -15,16 +15,13 @@ Node* nodeCreate(void *data, Node *before, Node *next, size_t dataSize, freeFunc
 	node = (Node*)malloc(sizeof(Node));
 	if(node == NULL) return NULL;
 
-	// TODO: CHECK IF CONSTRUCTOR FUNCTION IS NEEDED
-	// allocate memory for data. Free node and return NULL if not posible
-	node->data = malloc(dataSize);
+	// copy the data
+	node->copyFn = copyFn;
+	node->data = node->copyFn(data);
 	if(node->data == NULL){
 		free(node);
 		return NULL;
 	}
-
-	// copy the data
-	memcpy(node->data, data, dataSize);
 
 	// assign static values
 	node->dataSize = dataSize;

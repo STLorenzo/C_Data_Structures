@@ -44,7 +44,7 @@ void listDestroy(List *list){
 }
 
 STATUS listPrepend(List *list, void *data, size_t dataSize, freeFunction freeFn,
-	compareFunction compFn, toStringFunction toStringFn){
+	compareFunction compFn, toStringFunction toStringFn, copyFunction copyFn){
 	//input check
 	if(list == NULL || data == NULL
 		|| dataSize <= 0 || freeFn == NULL
@@ -55,7 +55,7 @@ STATUS listPrepend(List *list, void *data, size_t dataSize, freeFunction freeFn,
 
 	// Create node
 	node = nodeCreate(data, /* before */NULL, /* next */NULL, 
-		dataSize, freeFn, compFn, toStringFn);
+		dataSize, freeFn, compFn, toStringFn, copyFn);
 	if(node == NULL) return ERROR;
 
 	// Make node point to the previous first element
@@ -75,7 +75,7 @@ STATUS listPrepend(List *list, void *data, size_t dataSize, freeFunction freeFn,
 
 
 STATUS listAppend(List *list, void *data, size_t dataSize, freeFunction freeFn,
-	compareFunction compFn, toStringFunction toStringFn){
+	compareFunction compFn, toStringFunction toStringFn, copyFunction copyFn){
 	//input check
 	if(list == NULL || data == NULL
 		|| dataSize <= 0 || freeFn == NULL
@@ -86,7 +86,7 @@ STATUS listAppend(List *list, void *data, size_t dataSize, freeFunction freeFn,
 
 	// Create node
 	node = nodeCreate(data, /* before */NULL, /* next */NULL, 
-		dataSize, freeFn, compFn, toStringFn);
+		dataSize, freeFn, compFn, toStringFn, copyFn);
 	if(node == NULL) return ERROR;
 
 	// Make previous last node point to the last appended
@@ -208,7 +208,10 @@ char* listToString(List *list){
 	while(node){
 		string = nodeToString(node);
 		len += (strlen(string)+1);
-		final = (char*)realloc(final, len);
+		final = (char*)realloc(final,sizeof(char) * len);
+		if(!final){
+			return NULL;
+		}
 		strcat(final, string);
 		free(string);
 		if(node->next){
@@ -225,6 +228,10 @@ void listPrint(List *list, FILE *f){
 
 	char *list_string = NULL;
 	list_string = listToString(list);
+	if(!list_string){
+		printf("ERROR listToString\n\n");
+		return;
+	}
 	fprintf(f,"%s",list_string);
 	free(list_string);
 }

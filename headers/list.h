@@ -11,9 +11,9 @@ List* listCreate(void);
 void listDestroy(List *list);
 
 STATUS listPrepend(List *list, void *data, size_t dataSize, freeFunction freeFn,
-	compareFunction compFn, toStringFunction toStringFn);
+	compareFunction compFn, toStringFunction toStringFn, copyFunction copyFn);
 STATUS listAppend(List *list, void *data, size_t dataSize, freeFunction freeFn,
-	compareFunction compFn, toStringFunction toStringFn);
+	compareFunction compFn, toStringFunction toStringFn, copyFunction copyFn);
 
 int listSize(List *list);
 bool listIsEmpty(List *list);
